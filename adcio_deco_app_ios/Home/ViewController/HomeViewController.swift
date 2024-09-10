@@ -14,12 +14,21 @@ class HomeViewController: UIViewController {
     private var visibleCellsWorkItems: [IndexPath: DispatchWorkItem] = [:]
     private let impressionThreshold: TimeInterval = 1.0
     private let userAgent: String = "\(UIDevice.current.systemName)\(UIDevice.current.systemVersion)"
+    private let appVersion: String? = {
+        if let info: [String: Any] = Bundle.main.infoDictionary,
+           let currentVersion: String = info["CFBundleShortVersionString"] as? String {
+            return currentVersion
+        }
+        return nil
+    }()
     private var isLoadingMoreData = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presenter = HomePresenter(view: self)
+        presenter = HomePresenter(view: self,
+        userAgent: userAgent,
+        appVersion: appVersion ?? "")
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -35,7 +44,7 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        createRecommendationProducts(userAgent: userAgent)
+        createRecommendationProducts()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -108,7 +117,7 @@ class HomeViewController: UIViewController {
     private func loadMoreData() {
         guard !isLoadingMoreData else { return }
         isLoadingMoreData = true
-        createRecommendationProducts(userAgent: userAgent)
+        createRecommendationProducts()
     }
 }
 
@@ -177,12 +186,12 @@ extension HomeViewController: HomePresenterView {
         presenter?.onClick(suggestion)
     }
     
-    func createAdvertisementProducts(userAgent: String?) {
-        presenter?.createAdvertisementProducts(userAgent: userAgent)
+    func createAdvertisementProducts() {
+        presenter?.createAdvertisementProducts()
     }
     
-    func createRecommendationProducts(userAgent: String?) {
-        presenter?.createRecommendationProducts(userAgent: userAgent)
+    func createRecommendationProducts() {
+        presenter?.createRecommendationProducts()
     }
     
     func createAdvertisementBanners() {

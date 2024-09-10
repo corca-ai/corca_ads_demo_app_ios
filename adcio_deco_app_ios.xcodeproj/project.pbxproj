@@ -15,6 +15,7 @@
 		6998BEFD2BD8F64E0066ABD7 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6998BEFC2BD8F64E0066ABD7 /* ImageLoader.swift */; };
 		69C6C7B62C252AE100A91C28 /* BaselineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6C7B52C252AE100A91C28 /* BaselineEntity.swift */; };
 		69C8CF112C1C0C3200E4A899 /* ImpressionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C8CF102C1C0C3200E4A899 /* ImpressionManager.swift */; };
+		69D9CB432C8E9BEF00F35151 /* Amplitude in Frameworks */ = {isa = PBXBuildFile; productRef = 69D9CB422C8E9BEF00F35151 /* Amplitude */; };
 		9BD26EA62BD7F96700508AA6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD26EA52BD7F96700508AA6 /* AppDelegate.swift */; };
 		9BD26EA82BD7F96700508AA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD26EA72BD7F96700508AA6 /* SceneDelegate.swift */; };
 		9BD26EAD2BD7F96700508AA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BD26EAB2BD7F96700508AA6 /* Main.storyboard */; };
@@ -60,6 +61,7 @@
 			files = (
 				6978385B2C3521FB009FC0F7 /* AdcioAnalytics in Frameworks */,
 				697838592C3521F5009FC0F7 /* AdcioSDK in Frameworks */,
+				69D9CB432C8E9BEF00F35151 /* Amplitude in Frameworks */,
 				697838572C3521F5009FC0F7 /* AdcioPlacement in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +219,7 @@
 				697838562C3521F5009FC0F7 /* AdcioPlacement */,
 				697838582C3521F5009FC0F7 /* AdcioSDK */,
 				6978385A2C3521FB009FC0F7 /* AdcioAnalytics */,
+				69D9CB422C8E9BEF00F35151 /* Amplitude */,
 			);
 			productName = adcio_deco_app_ios;
 			productReference = 9BD26EA22BD7F96700508AA6 /* adcio_deco_app_ios.app */;
@@ -248,6 +251,7 @@
 			mainGroup = 9BD26E992BD7F96700508AA6;
 			packageReferences = (
 				697838542C3521E3009FC0F7 /* XCRemoteSwiftPackageReference "adcio-ios-sdk" */,
+				69D9CB412C8E9BEF00F35151 /* XCRemoteSwiftPackageReference "Amplitude-iOS" */,
 			);
 			productRefGroup = 9BD26EA32BD7F96700508AA6 /* Products */;
 			projectDirPath = "";
@@ -527,7 +531,15 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/corca-ai/adcio-ios-sdk";
 			requirement = {
-				branch = develop;
+				branch = demo;
+				kind = branch;
+			};
+		};
+		69D9CB412C8E9BEF00F35151 /* XCRemoteSwiftPackageReference "Amplitude-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-iOS";
+			requirement = {
+				branch = main;
 				kind = branch;
 			};
 		};
@@ -548,6 +560,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 697838542C3521E3009FC0F7 /* XCRemoteSwiftPackageReference "adcio-ios-sdk" */;
 			productName = AdcioAnalytics;
+		};
+		69D9CB422C8E9BEF00F35151 /* Amplitude */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69D9CB412C8E9BEF00F35151 /* XCRemoteSwiftPackageReference "Amplitude-iOS" */;
+			productName = Amplitude;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

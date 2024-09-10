@@ -21,5 +21,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Would like to get personalised Ads?</string>
 </dict>
 </plist>

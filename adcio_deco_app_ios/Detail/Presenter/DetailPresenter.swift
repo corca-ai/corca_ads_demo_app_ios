@@ -7,6 +7,7 @@
 
 import Foundation
 import AdcioAnalytics
+import Amplitude
 
 protocol DetailPresenterView: AnyObject {
     func onView(with path: String)
@@ -15,14 +16,17 @@ protocol DetailPresenterView: AnyObject {
 }
 
 final class DetailPresenter {
-    private let clientID: String = "f8f2e298-c168-4412-b82d-98fc5b4a114a"
+    private let clientID: String = "7bbb703e-a30b-4a4a-91b4-c0a7d2303415"
     private var analyticsManager: AnalyticsProductManageable
     private(set) var suggestion: SuggestionEntity
     
     weak var view: DetailPresenterView?
     
-    init(suggestion: SuggestionEntity, view: DetailPresenterView) {
-        self.analyticsManager = AnalyticsManager(clientID: clientID)
+    init(suggestion: SuggestionEntity, view: DetailPresenterView, userAgent: String?, appVersion: String
+    ) {
+        self.analyticsManager = AnalyticsManager(clientID: clientID,
+                                                 userAgent: userAgent,
+                                                 appVersion: appVersion)
         self.suggestion = suggestion
         self.view = view
     }
@@ -48,12 +52,13 @@ final class DetailPresenter {
     }
     
     func onView(with path: String) {
+        Amplitude.instance().logEvent("onView")
         analyticsManager.onView(customerID: nil,
                                 productIDOnStore: suggestion.product.id,
                                 requestID: suggestion.option.requestID,
                                 adsetID: suggestion.option.adsetID,
-                                categoryIDOnStore: nil, 
-                                userAgent: nil) { result, error in
+                                categoryIDOnStore: nil
+        ) { result, error in
             guard error == nil else {
                 print("onView ❌ : \(error)")
                 return
@@ -69,14 +74,15 @@ final class DetailPresenter {
     }
     
     func onAddToCart() {
+        Amplitude.instance().logEvent("onAddToCart")
         analyticsManager.onAddToCart(cartID: nil,
                                      customerID: nil,
                                      productIDOnStore: suggestion.product.id,
                                      requestID: suggestion.option.requestID,
                                      adsetID: suggestion.option.adsetID,
                                      categoryIdOnStore: nil,
-                                     quantity: nil, 
-                                     userAgent: nil) { result, error in
+                                     quantity: nil
+        ) { result, error in
             guard error == nil else {
                 print("onAddToCart ❌ : \(error)")
                 return
@@ -92,6 +98,7 @@ final class DetailPresenter {
     }
     
     func onPurchase() {
+        Amplitude.instance().logEvent("onPurchase")
         analyticsManager.onPurchase(orderID: "orderID",
                                     customerID: nil,
                                     requestID: suggestion.option.requestID,
@@ -99,8 +106,8 @@ final class DetailPresenter {
                                     categoryIDOnStore: nil,
                                     quantity: nil,
                                     productIDOnStore: suggestion.product.id,
-                                    amount: suggestion.product.price,
-                                    userAgent: nil) { result, error in
+                                    amount: suggestion.product.price
+        ) { result, error in
             guard error == nil else {
                 print("onPurchase ❌ : \(error)")
                 return

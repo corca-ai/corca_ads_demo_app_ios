@@ -1,13 +1,31 @@
 {
-  "originHash" : "705ff44e288ea71e2504b659cf51bafafd0a971a0811c5f3d37682a712f89cea",
+  "originHash" : "eeb0b29dbe168c3c7f1adf5d699208280fe6d453f32b018ed0e2ae389fba8684",
   "pins" : [
     {
       "identity" : "adcio-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/corca-ai/adcio-ios-sdk",
       "state" : {
-        "branch" : "develop",
-        "revision" : "569ca5acfd06c7d272c24803b586053a67b6b31c"
+        "branch" : "demo",
+        "revision" : "4fb69e1347d2c71b7dd6b3afae2d3ae926bf1292"
+      }
+    },
+    {
+      "identity" : "amplitude-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amplitude/Amplitude-iOS",
+      "state" : {
+        "branch" : "main",
+        "revision" : "681c49824a2b011256f3e66ab910f2e514629bd3"
+      }
+    },
+    {
+      "identity" : "analytics-connector-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amplitude/analytics-connector-ios.git",
+      "state" : {
+        "revision" : "e2ca17ac735bcbc48b13062484541702ef45153d",
+        "version" : "1.0.3"
       }
     },
     {

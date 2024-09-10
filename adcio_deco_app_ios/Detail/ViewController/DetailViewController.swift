@@ -17,11 +17,23 @@ class DetailViewController: UIViewController {
     
     private var suggestion: SuggestionEntity?
     private var presenter: DetailPresenter?
+    private let userAgent: String = "\(UIDevice.current.systemName)\(UIDevice.current.systemVersion)"
+    private let appVersion: String? = {
+        if let info: [String: Any] = Bundle.main.infoDictionary,
+           let currentVersion: String = info["CFBundleShortVersionString"] as? String {
+            return currentVersion
+        }
+        return nil
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let suggestion else { return }
-        presenter = DetailPresenter(suggestion: suggestion, view: self)
+        presenter = DetailPresenter(suggestion: suggestion,
+                                    view: self,
+                                    userAgent: userAgent,
+                                    appVersion: appVersion ?? ""
+        )
         
         self.navigationItem.title = presenter?.name() ?? ""
         guard let url = URL(string: presenter?.thumbnailImage() ?? "") else { return }

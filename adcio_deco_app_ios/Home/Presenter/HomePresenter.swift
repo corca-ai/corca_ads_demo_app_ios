@@ -10,12 +10,13 @@ import Foundation
 import AdcioAnalytics
 import AdcioPlacement
 import ControllerV1
+import Amplitude
 
 protocol HomePresenterView: AnyObject {
     func onClick(_ suggestion: SuggestionEntity)
     func onImpression(with option: LogOptionEntity)
-    func createAdvertisementProducts(userAgent: String?)
-    func createRecommendationProducts(userAgent: String?)
+    func createAdvertisementProducts()
+    func createRecommendationProducts()
     func createAdvertisementBanners()
     func createRecommendationBanners()
 }
@@ -38,22 +39,23 @@ final class HomePresenter {
     weak var view: HomePresenterView?
     var reloadCollectionView: (() -> Void)?
     
-    init(view: HomePresenterView) {
-        self.analyticsManager = AnalyticsManager(clientID: clientID)
-        self.placementManager = PlacementManager()
+    init(view: HomePresenterView, userAgent: String?, appVersion: String) {
+        self.analyticsManager = AnalyticsManager(clientID: clientID, userAgent: userAgent, appVersion: appVersion)
+        self.placementManager = PlacementManager(userAgent: userAgent, appVersion: appVersion)
         self.impressionManager = ImpressionManager()
         self.view = view
     }
     
     func onClick(_ suggestion: SuggestionEntity) {
+        Amplitude.instance().logEvent("onClick")
         guard suggestion.product.isAd else { return }
         
         let option = LogOptionMapper.map(from: suggestion.option)
         
         analyticsManager.onClick(option: option,
                                  customerID: nil,
-                                 productIDOnStore: suggestion.product.id,
-                                 userAgent: nil) { result, error in
+                                 productIDOnStore: suggestion.product.id
+        ) { result, error in
             guard error == nil else {
                 print("onClick ❌ : \(error)")
                 return
@@ -76,11 +78,10 @@ final class HomePresenter {
         append(with: option.adsetID)
         
         let optionEntity = LogOptionMapper.map(from: option)
-        
+        Amplitude.instance().logEvent("onImpression")
         analyticsManager.onImpression(option: optionEntity,
                                       customerID: nil,
-                                      productIDOnStore: nil,
-                                      userAgent: nil) { result, error in
+                                      productIDOnStore: nil) { result, error in
             guard error == nil else {
                 print("onImpression ❌ : \(error)")
                 return
@@ -96,20 +97,24 @@ final class HomePresenter {
     }
     
     /// create Advertisement Products method
-    func createAdvertisementProducts(userAgent: String? = nil) {
+    func createAdvertisementProducts() {
+        Amplitude.instance().logEvent("AdvertisementProducts")
         placementManager.createAdvertisementProducts(
             clientID: clientID,
             excludingProductIDs: excludingProductIDs,
             categoryID: nil,
-            placementID: "e4e14a3c-d99f-4646-b31e-bbe144e65dff",
+            placementID: "767dc293-fa9d-48fa-a3b4-429ccc4ee8fe",
             customerID: nil,
             fromAgent: false,
             baselineProductIDs: baselineProductIDs,
             filters: nil,
-            targets: nil,
-            userAgent: userAgent)
+            targets: [
+                SuggestionRequestTarget(keyName: "gender", values: ["male"]),
+                SuggestionRequestTarget(keyName: "age", values: ["20s"])
+            ]
+        )
         { [weak self] result, error in
-            guard error == nil else {
+            guard let error else {
                 print("createAdvertisementProducts ❌ : \(error)")
                 return
             }
@@ -128,6 +133,7 @@ final class HomePresenter {
     
     /// create Advertisement Banners method
     func createAdvertisementBanners() {
+        Amplitude.instance().logEvent("AdvertisementBanners")
         placementManager.createAdvertisementBanners(
             clientID: clientID,
             excludingProductIDs: nil,
@@ -135,8 +141,8 @@ final class HomePresenter {
             placementID: "placementID",
             customerID: "customerID",
             fromAgent: false,
-            targets: [],
-            userAgent: nil)
+            targets: []
+        )
         { [weak self] result, error in
             guard error == nil else {
                 print("createAdvertisementBanners ❌ : \(error)")
@@ -154,7 +160,8 @@ final class HomePresenter {
     }
     
     /// create Recommendation Products method
-    func createRecommendationProducts(userAgent: String? = nil) {
+    func createRecommendationProducts() {
+        Amplitude.instance().logEvent("RecommendationProducts")
         placementManager.createRecommendationProducts(
             clientID: clientID,
             excludingProductIDs: excludingProductIDs,
@@ -163,15 +170,11 @@ final class HomePresenter {
             customerID: nil,
             fromAgent: false,
             baselineProductIDs: baselineProductIDs,
-            filters: [
-                [
-                    "province_id" : ProductFilterOperationDto(equalTo: 1)
-                ]
-            ],
+            filters: nil,
             targets: [
-                SuggestionRequestTarget(keyName: "genter", values: ["male"])
-            ],
-            userAgent: nil)
+                SuggestionRequestTarget(keyName: "gender", values: ["male"])
+            ]
+        )
         { [weak self] result, error in
             guard error == nil else {
                 print("createRecommendationProducts ❌ : \(error)")
@@ -192,6 +195,7 @@ final class HomePresenter {
     
     /// create Recommendation Bannders method
     func createRecommendationBanners() {
+        Amplitude.instance().logEvent("RecommendationBanners")
         placementManager.createRecommendationBanners(
             clientID: clientID,
             excludingProductIDs: nil,
@@ -199,8 +203,8 @@ final class HomePresenter {
             placementID: "placementID",
             customerID: "customerID",
             fromAgent: false,
-            targets: [],
-            userAgent: nil)
+            targets: []
+        )
         { [weak self] result, error in
             guard error == nil else {
                 print("createRecommendationBanners ❌ : \(error)")
