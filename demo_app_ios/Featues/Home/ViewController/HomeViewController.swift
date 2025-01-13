@@ -61,7 +61,7 @@ class HomeViewController: UIViewController {
         collectionView.register(nibName, forCellWithReuseIdentifier: PlacementCell.cellReuseIdentifier)
     }
     
-    // 기준1.  셀이 50% 이상 노출되었는지, 1초 이상 유지되었는지 확인
+    // 기준1. 관찰 대상의 50% 이상이 뷰포트에 보여야 합니다.
     private func checkVisibleCells() {
         for cell in collectionView.visibleCells {
             if let indexPath = collectionView.indexPath(for: cell),
@@ -94,7 +94,7 @@ class HomeViewController: UIViewController {
     
     private func scheduleImpression(for indexPath: IndexPath,
                                     advertisementProduct: AdvertisementItem) {
-        // 기준3. 이미 스케줄링 중이라면 중복으로 스케줄 X
+        // 기준3. 이미 기록된 상품은 재기록하지 않습니다.
         if visibleCellsWorkItems[indexPath] != nil {
             return
         }
@@ -115,7 +115,7 @@ class HomeViewController: UIViewController {
         
         visibleCellsWorkItems[indexPath] = workItem
         
-        // 기준2. 1초 후 실행
+        // 기준2. 1초 이상 observe된 상품만 기록됩니다.
         DispatchQueue.main.asyncAfter(deadline: .now() + impressionThreshold,
                                       execute: workItem)
     }
