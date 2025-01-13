@@ -94,7 +94,7 @@ class HomeViewController: UIViewController {
     
     private func scheduleImpression(for indexPath: IndexPath,
                                     advertisementProduct: AdvertisementItem) {
-        // 기준3. 이미 기록된 상품은 재기록하지 않습니다.
+        // 기준3. 동일한 [requestId, adsetId] 조합으로 이미 로깅된 노출은 재로깅하지 않습니다.
         if visibleCellsWorkItems[indexPath] != nil {
             return
         }
